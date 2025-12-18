@@ -683,6 +683,11 @@ class KVMServer:
                     self.return_to_server()
                     return False
 
+            # SUPPRESS ESCAPE SEQUENCES: Suppress arrow keys when ANY modifier is pressed
+            # This prevents ugly ANSI escape codes (^[[1;5A, etc.) from appearing
+            if (self.ctrl_pressed or self.win_pressed) and key in (keyboard.Key.up, keyboard.Key.down, keyboard.Key.left, keyboard.Key.right):
+                return False  # Suppress all modifier+arrow combinations
+
             # Forward other keys to client if active
             if self.current_screen != "server":
                 try:
