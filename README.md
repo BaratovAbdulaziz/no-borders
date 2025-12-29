@@ -1,145 +1,231 @@
-# KVM No Borders
+# No-Borders KVM Switch
 
-**KVM No Borders** is a lightweight, open‑source tool that lets you control multiple computers (Linux / Windows) using a **single keyboard and mouse**, just like a software KVM switch — **no physical hardware required**.
+> **Connect Without Limits** - Cross-platform keyboard and mouse sharing tool
 
-Think of it as *Mouse Without Borders / Barrier*, but focused on simplicity, low latency, and cross‑platform setups.
+[![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/platform-Windows%20|%20Linux%20|%20macOS-lightgrey.svg)]()
 
----
+The No-Borders KVM Switch is a professional, cross-platform application that enables seamless keyboard and mouse sharing between multiple computers over a network connection. Share your input devices without physical KVM switches or cables.
 
 ## ✨ Features
 
-* 🖱️ Share **keyboard & mouse** across multiple PCs
-* 🖥️ Works over **local network (LAN)**
-* 🔁 Seamless cursor movement between screens
-* 🐧 Linux & 🪟 Windows support
-* ⚡ Lightweight & fast
-* 🔐 No cloud, no tracking — local only
+- **🔗 Seamless Sharing**: Share keyboard and mouse between multiple computers
+- **🌐 Cross-Platform**: Works on Windows, Linux, and macOS
+- **🚀 Auto-Setup**: Automatically installs dependencies if needed
+- **💫 Beautiful UI**: Animated splash screen and intuitive control panel
+- **🔒 Secure Connection**: Direct peer-to-peer network communication
+- **⚡ Low Latency**: Optimized for responsive real-time control
+- **🎯 Easy Setup**: Simple server/client role selection
+- **🔄 Quick Toggle**: Switch control between computers with one click
 
----
+## 🚀 Quick Start
 
-## 🧠 How It Works
+### Installation
 
-One machine acts as the **server (host)** and captures keyboard/mouse input.
-Other machines run as **clients**, receiving input over the network.
+1. **Clone or download the project**:
+   ```bash
+   git clone https://github.com/no-borders/kvm-switch.git
+   cd no-borders-kvm
+   ```
+
+2. **Install dependencies** (automatic):
+   ```bash
+   ./scripts/install.sh
+   ```
+
+3. **Run the application**:
+   ```bash
+   ./scripts/run.sh
+   ```
+
+### Alternative Installation Methods
+
+**Using pip (recommended for development)**:
+```bash
+pip install -e .
+kvm-switch
+```
+
+**Direct Python execution**:
+```bash
+python -m kvm_switch
+```
+
+## 💻 Usage
+
+### Step 1: Choose Your Role
+
+When you start the application, select your role:
+
+- **Server (Controller)**: The computer that initially controls both systems
+- **Client (Controlled)**: The computer that will be controlled remotely
+
+### Step 2: Connect
+
+1. Start the **Server** application first
+2. Start the **Client** application on the second computer
+3. The client will automatically detect the server and ask for approval
+4. Click **Yes** to establish the connection
+
+### Step 3: Share Control
+
+- **Green Button**: You have control of both systems
+- **Red Button**: The other computer has control
+- **Click the button** to toggle control between computers
+
+## 🛠️ Development
+
+### Project Structure
 
 ```
-[ Keyboard + Mouse ]
-          │
-      (Server PC)
-          │  LAN
- ┌────────┴────────┐
-(Client PC)   (Client PC)
+no-borders-kvm/
+├── src/kvm_switch/           # Main package
+│   ├── core/                 # Core functionality
+│   ├── ui/                   # User interface
+│   ├── handlers/             # Event handlers
+│   └── utils/                # Utilities
+├── scripts/                  # Build scripts
+├── tests/                    # Test suite
+└── docs/                     # Documentation
 ```
 
-Move your cursor to the edge of one screen and it appears on the next machine.
+### Build Scripts
 
----
+- **`./scripts/clean.sh`**: Clean build artifacts
+- **`./scripts/build.sh`**: Build distribution packages
+- **`./scripts/install.sh`**: Install dependencies and package
+- **`./scripts/run.sh`**: Run the application
 
-## 📦 Installation
+### Development Setup
 
-### Requirements
+1. **Create virtual environment**:
+   ```bash
+   ./scripts/install.sh --venv
+   ```
 
-* Same local network (Wi‑Fi or Ethernet)
-* Python 3.x *(if applicable)*
-* Linux (X11 / Wayland*) or Windows
+2. **Activate virtual environment**:
+   ```bash
+   source venv/bin/activate
+   ```
 
-> ⚠️ Wayland support may be limited depending on compositor.
+3. **Run in development mode**:
+   ```bash
+   python -m kvm_switch
+   ```
 
-### Clone the repository
+### Running Tests
 
 ```bash
-git clone https://github.com/BaratovAbdulaziz/no-borders/tree/main
-cd no-borders
+# Install test dependencies
+pip install -e .[test]
+
+# Run all tests
+python -m pytest tests/
+
+# Run with coverage
+python -m pytest tests/ --cov=kvm_switch --cov-report=html
 ```
 
-### Install dependencies
+## 📋 Requirements
 
+### System Requirements
+
+- **Python**: 3.7 or higher
+- **Operating System**: Windows, Linux, or macOS
+- **Network**: Both computers must be on the same network
+
+### Dependencies
+
+- `pynput>=1.7.6`: For keyboard and mouse input handling
+
+Dependencies are automatically installed when you run the application for the first time.
+
+## 🔧 Configuration
+
+The application uses sensible defaults, but you can customize settings in `src/kvm_switch/utils/config.py`:
+
+```python
+# Network settings
+BROADCAST_PORT = 54321
+COMM_PORT = 54322
+BROADCAST_INTERVAL = 2
+
+# UI settings
+CONTROL_PANEL_WIDTH = 200
+CONTROL_PANEL_HEIGHT = 80
+
+# Screen dimensions (auto-detected)
+DEFAULT_SCREEN_WIDTH = 1920
+DEFAULT_SCREEN_HEIGHT = 1080
+```
+
+## 🎯 How It Works
+
+1. **Discovery**: Server broadcasts its presence on the network
+2. **Connection**: Client detects server and establishes secure TCP connection
+3. **Synchronization**: Both computers exchange screen dimensions
+4. **Control**: Input events are captured and transmitted between computers
+5. **Switching**: Control can be toggled seamlessly between machines
+
+## 🔒 Security
+
+- Direct peer-to-peer communication (no external servers)
+- Connection approval required on client side
+- Traffic stays within your local network
+- No data is stored or transmitted to external services
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Connection Failed**:
+- Ensure both computers are on the same network
+- Check firewall settings (ports 54321 and 54322)
+- Try running as administrator/sudo if needed
+
+**Dependencies Not Installing**:
 ```bash
-pip install -r requirements.txt
+# Manual installation
+pip3 install --user pynput==1.7.6
+
+# Or with system packages flag
+pip3 install --break-system-packages pynput==1.7.6
 ```
 
----
+**Permission Errors**:
+- On macOS: Enable accessibility permissions for Terminal/Python
+- On Linux: You may need to run with appropriate permissions
 
-## ▶️ Usage
+### Getting Help
 
-### Start server (host machine)
+1. Check the [documentation](docs/)
+2. Look at [existing issues](https://github.com/no-borders/kvm-switch/issues)
+3. Create a new issue with detailed information
 
-1. Fork the repo
-2. start the script
-3. choose the options weather it is server or client
-4. use it
----
+## 🤝 Contributing
 
-```bash
-python KVM.py
-```
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-### Start client (secondary machine)
-
-```bash
-python client.py --server-ip 192.168.1.10
-```
-
-> Replace the IP with your server machine’s local IP address.
-
----
-
-## ⚙️ Configuration
-
-You can configure:
-
-* Screen layout (left / right / top / bottom)
-* Hotkeys
-* Port number
-* Sensitivity & delay
-
----
-
-## 🔒 Security Notes
-
-* Designed for **trusted local networks only**
-* No encryption by default
-* Do **not expose ports to the internet**
-
----
-
-## 🐞 Known Issues
-
-- In windows it has some problems for upgrading pip
-- inslling packages in windows
-- some wrong prompting users while using powershell
-
----
-
-## 🚀 Roadmap
-
-* [ ] Clipboard sharing
-* [ ] Encrypted communication
-* [ ] Auto‑discovery on LAN
-* [ ] Wayland‑native input support
-* [ ] GUI configuration
-
----
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
 ## 📄 License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with Python and Tkinter
+- Uses `pynput` for cross-platform input handling
+- Inspired by professional KVM switch solutions
 
 ---
 
-## 💬 Inspiration
+**No-Borders KVM Switch** - Connecting computers, eliminating boundaries.
 
-Inspired by:
-
-* Mouse Without Borders
-* Barrier / Synergy
-
-But built to be **simpler, lighter, and hackable**.
-
----
-
-## ⭐ Support
-
-If you find this project useful, please ⭐ the repository and share it!
-
-Happy hacking 🚀
+For more information, visit our [documentation](docs/) or check out the [project wiki](https://github.com/no-borders/kvm-switch/wiki).
