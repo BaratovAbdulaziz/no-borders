@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "no-borders-kvm"
+dynamic = ["version"]
+authors = [
+    {name = "No-Borders Team", email = "support@no-borders.com"},
+]
+description = "Seamless Multi-Computer Control"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Systems Administration",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+]
+keywords = ["kvm", "switch", "remote", "control", "multi-computer", "seamless"]
+dependencies = [
+    "pynput==1.7.6",
+]
+
+[project.scripts]
+kvm-switch = "kvm_switch.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/no-borders/no-borders-kvm"
+Documentation = "https://github.com/no-borders/no-borders-kvm/wiki"
+Repository = "https://github.com/no-borders/no-borders-kvm"
+"Bug Tracker" = "https://github.com/no-borders/no-borders-kvm/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.dynamic]
+version = {attr = "kvm_switch.utils.config.APP_VERSION"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.pyi", "py.typed"]

@@ -1,145 +1,215 @@
-# KVM No Borders
+# No-Borders KVM Switch
 
-**KVM No Borders** is a lightweight, open‑source tool that lets you control multiple computers (Linux / Windows) using a **single keyboard and mouse**, just like a software KVM switch — **no physical hardware required**.
+[![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
-Think of it as *Mouse Without Borders / Barrier*, but focused on simplicity, low latency, and cross‑platform setups.
+⚡ **Seamless Multi-Computer Control**
 
----
+No-Borders is a professional KVM (Keyboard, Video, Mouse) switch application that enables you to control multiple computers with a single keyboard and mouse across a network connection. Move seamlessly between machines without physical hardware switches.
 
 ## ✨ Features
 
-* 🖱️ Share **keyboard & mouse** across multiple PCs
-* 🖥️ Works over **local network (LAN)**
-* 🔁 Seamless cursor movement between screens
-* 🐧 Linux & 🪟 Windows support
-* ⚡ Lightweight & fast
-* 🔐 No cloud, no tracking — local only
+- **🔄 Automatic Discovery**: No IP configuration needed - auto-discover other machines
+- **🖱️ Real-time Input**: Smooth mouse and keyboard control with minimal latency
+- **🎛️ Flexible Control**: Choose between button toggle or custom hotkey
+- **🎨 Modern UI**: Beautiful, animated interface with professional design
+- **🔒 Secure**: Direct peer-to-peer connections over your local network
+- **🌐 Cross-platform**: Works on Linux, macOS, and Windows
+- **⚙️ Auto-setup**: Installs dependencies automatically on first run
+- **📊 Status Indicators**: Clear visual feedback for connection and control state
 
----
+## 🚀 Quick Start
 
-## 🧠 How It Works
-
-One machine acts as the **server (host)** and captures keyboard/mouse input.
-Other machines run as **clients**, receiving input over the network.
-
-```
-[ Keyboard + Mouse ]
-          │
-      (Server PC)
-          │  LAN
- ┌────────┴────────┐
-(Client PC)   (Client PC)
-```
-
-Move your cursor to the edge of one screen and it appears on the next machine.
-
----
-
-## 📦 Installation
-
-### Requirements
-
-* Same local network (Wi‑Fi or Ethernet)
-* Python 3.x *(if applicable)*
-* Linux (X11 / Wayland*) or Windows
-
-> ⚠️ Wayland support may be limited depending on compositor.
-
-### Clone the repository
+### Installation
 
 ```bash
-git clone https://github.com/BaratovAbdulaziz/no-borders/tree/main
-cd no-borders
+# Clone the repository
+git clone https://github.com/no-borders/no-borders-kvm.git
+cd no-borders-kvm
+
+# Install with auto-dependency setup
+./scripts/install.sh
+
+# Run the application
+./scripts/run.sh
 ```
 
-### Install dependencies
+### Alternative Installation
 
 ```bash
-pip install -r requirements.txt
+# Using pip (user install)
+pip install --user git+https://github.com/no-borders/no-borders-kvm.git
+
+# Or download and run directly
+python -m kvm_switch
 ```
 
----
+## 📖 Usage
 
-## ▶️ Usage
+### Server Mode (Control other computers)
 
-### Start server (host machine)
+1. Launch No-Borders
+2. Select **SERVER** mode
+3. Choose control method:
+   - **Toggle Button**: Click the indicator button to switch control
+   - **Custom Hotkey**: Record a key combination (e.g., Ctrl+Shift+Space)
+4. The server will broadcast and wait for clients
+5. Use your chosen control method to toggle between machines
 
-1. Fork the repo
-2. start the script
-3. choose the options weather it is server or client
-4. use it
----
+### Client Mode (Be controlled by others)
+
+1. Launch No-Borders  
+2. Select **CLIENT** mode
+3. The client will auto-discover and connect to servers
+4. Your keyboard and mouse will be controlled when server transfers control
+
+## 🔧 Configuration
+
+### Network Settings
+
+- **Discovery Port**: 54321 (UDP broadcasts)
+- **Communication Port**: 54322 (TCP connections)
+- **Protocol**: Custom JSON messaging over TCP
+- **Security**: Local network only, peer-to-peer
+
+### Control Methods
+
+| Method | Description | Use Case |
+|--------|-------------|-----------|
+| **Button** | Click indicator button | Quick access, visible UI |
+| **Hotkey** | Custom key combo | Fast switching, no mouse needed |
+
+### UI Features
+
+- **Animated Splash**: Professional startup animation
+- **Draggable Indicator**: Status window you can position anywhere
+- **Visual Overlay**: Clear indication when control is transferred
+- **Status Colors**: 
+  - 🟡 Yellow: Connecting
+  - 🟢 Green: In Control  
+  - 🔴 Red: Peer Control
+
+## 🏗️ Development
+
+### Build from Source
 
 ```bash
-python KVM.py
+# Clean previous builds
+./scripts/clean.sh --all
+
+# Build packages
+./scripts/build.sh
+
+# Install in development mode
+./scripts/install.sh --dev
 ```
 
-### Start client (secondary machine)
+### Project Structure
+
+```
+src/kvm_switch/
+├── core/           # Main application logic
+├── ui/             # User interface components  
+├── handlers/        # Input and message handling
+└── utils/          # Configuration and setup
+```
+
+### Running Tests
 
 ```bash
-python client.py --server-ip 192.168.1.10
+# Run all tests
+python -m pytest tests/
+
+# Run with coverage
+python -m pytest --cov=src tests/
 ```
 
-> Replace the IP with your server machine’s local IP address.
+## 🔒 Requirements
 
----
+- **Python**: 3.7 or higher
+- **Dependencies**: Auto-installed (pynput 1.7.6, tkinter)
+- **Network**: Local network connectivity
+- **Permissions**:
+  - **Linux**: X11 access
+  - **macOS**: Accessibility permissions  
+  - **Windows**: Standard user permissions
 
-## ⚙️ Configuration
+## 🐛 Troubleshooting
 
-You can configure:
+### Common Issues
 
-* Screen layout (left / right / top / bottom)
-* Hotkeys
-* Port number
-* Sensitivity & delay
+**"Permission denied" or "Access denied"**
+- **Linux**: Run with `xhost +local:` or check X11 permissions
+- **macOS**: Grant Accessibility permissions in System Preferences
+- **Windows**: Run as Administrator if needed
 
----
+**"No computers found"**
+- Check firewall settings for ports 54321-54322
+- Ensure all machines are on the same network
+- Disable VPN temporarily for testing
 
-## 🔒 Security Notes
+**"Input not working"**
+- Verify accessibility permissions
+- Check if another input device is active
+- Restart the application
 
-* Designed for **trusted local networks only**
-* No encryption by default
-* Do **not expose ports to the internet**
+### Debug Mode
 
----
+```bash
+# Enable detailed logging
+./scripts/run.sh --debug
 
-## 🐞 Known Issues
+# Or set environment variable
+export KVM_DEBUG=1
+python -m kvm_switch
+```
 
-- In windows it has some problems for upgrading pip
-- inslling packages in windows
-- some wrong prompting users while using powershell
+### Log Analysis
 
----
+```bash
+# Save logs to file
+./scripts/run.sh 2>&1 | tee kvm.log
 
-## 🚀 Roadmap
+# Filter for specific issues
+grep -i "error\|failed\|timeout" kvm.log
+```
 
-* [ ] Clipboard sharing
-* [ ] Encrypted communication
-* [ ] Auto‑discovery on LAN
-* [ ] Wayland‑native input support
-* [ ] GUI configuration
+## 🤝 Contributing
 
----
+We welcome contributions! Here's how to get started:
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Make** your changes
+4. **Add** tests for new functionality
+5. **Ensure** all tests pass: `python -m pytest`
+6. **Submit** a pull request
+
+### Code Style
+
+- Follow PEP 8 style guidelines
+- Add type hints to all functions
+- Include docstrings for classes and methods
+- Maintain test coverage above 80%
 
 ## 📄 License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **pynput** library for cross-platform input handling
+- **tkinter** for the GUI framework
+- **socket** programming for network communication
+
+## 📞 Support
+
+- **📚 Documentation**: [Full Documentation](docs/README.md)
+- **🐛 Issues**: [Report Bugs](https://github.com/no-borders/no-borders-kvm/issues)
+- **💬 Discussions**: [Community Forum](https://github.com/no-borders/no-borders-kvm/discussions)
+- **📖 Wiki**: [Knowledge Base](https://github.com/no-borders/no-borders-kvm/wiki)
 
 ---
 
-## 💬 Inspiration
-
-Inspired by:
-
-* Mouse Without Borders
-* Barrier / Synergy
-
-But built to be **simpler, lighter, and hackable**.
-
----
-
-## ⭐ Support
-
-If you find this project useful, please ⭐ the repository and share it!
-
-Happy hacking 🚀
+**⚡ No-Borders - Break down the barriers between your computers.**
